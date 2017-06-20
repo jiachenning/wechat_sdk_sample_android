@@ -1,17 +1,19 @@
 package net.sourceforge.simcpux;
 
 
-import org.json.JSONObject;
-import com.tencent.mm.opensdk.constants.Build;
-import com.tencent.mm.opensdk.modelpay.PayReq;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.tencent.mm.opensdk.constants.Build;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+
+import org.json.JSONObject;
 
 public class PayActivity extends Activity {
 	
@@ -29,6 +31,7 @@ public class PayActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+//				fakeRequest();
 				String url = "http://wxpay.weixin.qq.com/pub_v2/app/app_pay.php?plat=android";
 				Button payBtn = (Button) findViewById(R.id.appay_btn);
 				payBtn.setEnabled(false);
@@ -38,7 +41,7 @@ public class PayActivity extends Activity {
 					if (buf != null && buf.length > 0) {
 						String content = new String(buf);
 						Log.e("get server pay params:",content);
-			        	JSONObject json = new JSONObject(content); 
+			        	JSONObject json = new JSONObject(content);
 						if(null != json && !json.has("retcode") ){
 							PayReq req = new PayReq();
 							//req.appId = "wxf8b4f85f3a794e77";  // 测试用appId
@@ -78,5 +81,21 @@ public class PayActivity extends Activity {
 			}
 		});
 	}
-	
+
+	private void fakeRequest() {
+		PayReq req = new PayReq();
+		req.appId = "wxf8b4f85f3a794e77";  // 测试用appId
+//		req.appId			= json.getString("appid");
+		req.partnerId		= "123123213";
+		req.prepayId		= "123123213";
+		req.nonceStr		= "123123213";
+		req.timeStamp		= "2017-06-20";
+		req.packageValue	= "123123213";
+		req.sign			= "123123213";
+		req.extData			= "app data"; // optional
+		Toast.makeText(PayActivity.this, "正常调起支付", Toast.LENGTH_SHORT).show();
+		// 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+		api.sendReq(req);
+	}
+
 }
